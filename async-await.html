@@ -1,0 +1,65 @@
+ <!DOCTYPE html>
+<html>
+<body>
+<h1>JavaScript Promise Object</h1>
+
+<button id = "start-button" onclick = "handlePromise()">Start</button>
+
+<p id="demo"></p>
+
+<script>
+    var x = 4;
+    var y = 10;
+    var testSum = 14; // x + y
+    var testMult = 140; // sum * y
+    var testDivide = 35; // mult / x
+
+    function output(some) {
+        document.getElementById("demo").innerHTML += some + "<br>";
+    }
+
+    function disableButton(){
+        document.getElementById("start-button").disabled = true;
+        document.getElementById("start-button").textContent = "Processing..";
+    }
+    function enableButton(){
+        document.getElementById("start-button").disabled = false;
+        document.getElementById("start-button").textContent = "Start";
+    }
+
+    function checkWithTimeout(subject, tester){
+        return new Promise(function(resolve, reject) {
+        
+        setTimeout(() => {
+            if(subject == tester){
+                resolve(subject);
+            } else {
+                reject("Error");
+            }}, 2000);
+        });
+    }
+
+    async function handlePromise(){
+        disableButton();
+        
+        try{
+            let sum = await checkWithTimeout(x + y, testSum);
+            output(sum + " OK");
+
+            let mult = await checkWithTimeout(sum * y, testMult);
+            output(mult + " OK");
+
+            let divide = await checkWithTimeout(mult / x, testDivide);
+            output(divide + " OK");
+
+            let value = await Promise.reject(false);
+            output(value ? "DONE":"FAILED");
+        }catch(error){
+            output(error + ". Try again");
+        }finally{
+            enableButton();
+        }
+    }
+</script>
+</body>
+</html>
