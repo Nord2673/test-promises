@@ -1,0 +1,73 @@
+ <!DOCTYPE html>
+<html>
+<body>
+<h1>JavaScript Promise Object</h1>
+
+<button id = "start-button" onclick = "handlePromise()">Start</button>
+
+<p id="demo"></p>
+
+<script>
+    var x = 10;
+    var y = 4;
+    var testSum = 14;
+    var testMult = 40;
+    var testDivide = 2.5;
+    var testExp = 10000;
+    var testTotalSum = 10056.5;
+    var counter = 0;
+
+    function output(some) {
+        document.getElementById("demo").innerHTML += some + "<br>";
+    }
+
+    function disableButton(){
+        document.getElementById("start-button").disabled = true;
+        document.getElementById("start-button").textContent = "Processing..";
+    }
+    function enableButton(){
+        document.getElementById("start-button").disabled = false;
+        document.getElementById("start-button").textContent = "Start";
+    }
+
+    function checkWithTimeout(subject, tester, timeout){
+        return new Promise(function(resolve, reject) {
+        
+        setTimeout(() => {
+            if(subject == tester){
+                resolve(subject);
+                counter++;
+                output(counter + " OK");
+            } else {
+                reject("Error");
+            }}, timeout);
+        });
+    }
+
+    function handlePromise(){
+        disableButton();
+
+        Promise.all([
+            checkWithTimeout(x + y, testSum, 1000),
+            checkWithTimeout(x * y, testMult, 2000),
+            checkWithTimeout(x / y, testDivide, 2000),
+            checkWithTimeout(x ** y, testExp, 3000)
+        ])
+        .then(results => {
+            //output(results.reduce((total, value) => {return total + value}));
+            return checkWithTimeout(results.reduce((total, value) => {return total + value}), testTotalSum, 1000);
+        })
+        .then(result => {
+            output(result);
+        })
+        .catch(error => {
+            output(error);
+        })
+        .finally(() => {
+            enableButton();
+            counter = 0;
+        });
+    }
+</script>
+</body>
+</html>
