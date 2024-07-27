@@ -13,7 +13,6 @@
   var testSum = 14; // x + y
   var testMult = 140; // sum * y
   var testDivide = 35; // mult / x
-  var outsideReject;
 
   function output(some) {
     document.getElementById("demo").innerHTML += some + "<br>";
@@ -47,31 +46,31 @@
       sum => {
         output(sum + " OK");
         return checkWithTimeout(sum * y, testMult);
-      },
-      onReject => {throw new Error("Sum interrupted");}
+      }
     )
     .then(mult => {
       output(mult + " OK");
       return checkWithTimeout(mult / x, testDivide);
-    },
-      onReject => { 
-        throw onReject ? onReject : new Error("Mult interrupted");
-      }
-    )
+    })
     .then(divide => {
       output(divide + " OK");
-      return true;
-      //return new Promise((resolve, reject) => reject(true));
-    },
-      onReject => {
-        throw onReject ? onReject : new Error("Divide interrupted");
-      }
-    )
+      //return true;
+      return new Promise((resolve, reject) => reject(false));
+    })
     .then(
-      value => {output(value ? "DONE":"FAILED");}
-    )
-    .catch(
-      error => {output(error + ". Try again");
+      value => {
+        output(value ? "DONE":"FAILED");
+      },
+      error => {
+        if (error) {
+          output("FAILED");
+        } else {
+          error = "Thrown error";
+          throw error;
+      }
+    })
+    .catch(error => {
+      output(error + ". Try again");
     })
     .finally(() => {
       enableButton();
