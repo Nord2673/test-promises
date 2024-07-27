@@ -4,7 +4,6 @@
 <h1>JavaScript Promise Object</h1>
 
 <button id = "start-button" onclick = "handlePromise()">Start</button>
-<button id = "stop-button" onclick = "outsideReject()">Stop</button>
 
 <p id="demo"></p>
 
@@ -32,8 +31,7 @@
   function checkWithTimeout(subject, tester){
     return new Promise(function(resolve, reject) {
       
-      outsideReject = reject;
-      timeVar = setTimeout(() => {
+      setTimeout(() => {
         if(subject == tester){
           resolve(subject);
         } else {
